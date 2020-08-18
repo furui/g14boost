@@ -41,6 +41,12 @@ namespace PowerCfg
         public List<QuerySubGroup> SubGroups;
     }
 
+    public enum ValueIndex
+    {
+        AC,
+        DC
+    }
+
     public class PowerCfgBroker
     {
         [DllImport("shell32.dll", SetLastError = true)]
@@ -296,6 +302,34 @@ namespace PowerCfg
             }
 
             return qv;
+        }
+
+        public static void SetValueIndex(ValueIndex Index, string Scheme, string SubGroup, string Settings, string Value)
+        {
+            if (!IsUserAnAdmin()) throw new System.UnauthorizedAccessException("User must be an administrator to modify value indexes");
+            List<string> error = new List<string>();
+
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "powercfg.exe",
+                    Arguments = $"{(Index == ValueIndex.AC ? "/SETACVALUEINDEX" : "/SETDCVALUEINDEX")} {Scheme} {SubGroup} {Settings} {Value}",
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+            p.Start();
+            while (!p.StandardError.EndOfStream)
+            {
+                string line = p.StandardError.ReadLine();
+                error.Add(line);
+            }
+            bool exited = p.WaitForExit(5000);
+            if (!exited) throw new System.TimeoutException($"Timeout setting {SubGroup} {Settings} value index: {String.Join(",", error.ToArray())}");
+            if (p.ExitCode != 0) throw new System.ArgumentException($"Could not set {SubGroup} {Settings} value index: {String.Join(",", error.ToArray())}");
+
         }
     }
 }
