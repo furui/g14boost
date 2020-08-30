@@ -27,6 +27,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $(System.DefaultWorkingDirectory)/g14boost/bin/Release
+    artifactName: g14boost
+
 #- task: VSTest@2
 #  inputs:
 #    platform: '$(buildPlatform)'
