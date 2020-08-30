@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenHardwareMonitor.Hardware;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,6 +18,36 @@ namespace g14boost
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Indicates if we're running on battery power.
+        /// If we are, then disable CPU wasting things like animations, background operations, network, I/O, etc
+        /// </summary>
+        private bool IsRunningOnBattery()
+        {
+            {
+                PowerLineStatus pls = System.Windows.Forms.SystemInformation.PowerStatus.PowerLineStatus;
+
+                //Offline means running on battery
+                return (pls == PowerLineStatus.Offline);
+            }
+        }
+
+        private void LoadData()
+        {
+            if (Properties.Settings.Default.EnabledAC || Properties.Settings.Default.EnabledDC)
+            {
+                PowerCfg.PowerCfgBroker.SetAttribute("sub_processor", "perfboostmode", "attrib_hide", false);
+                tempCheckTimer.Interval = (int)Properties.Settings.Default.RefreshRate;
+                tempCheckTimer.Enabled = true;
+                mainTrayIcon.Text = "Enabled G14 temp aware boost";
+            } else
+            {
+                tempCheckTimer.Enabled = false;
+                mainTrayIcon.Text = "Disabled G14 temp aware boost";
+                return;
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             Form form = (Form)sender;
@@ -26,6 +57,19 @@ namespace g14boost
             form.StartPosition = FormStartPosition.Manual;
             form.Location = new System.Drawing.Point(-2000, -2000);
             form.Size = new System.Drawing.Size(1, 1);
+            LoadData();
+            if (Properties.Settings.Default.FirstTime)
+            {
+                DialogResult result = MessageBox.Show("G14Boost enables and disables boost on your CPU, and it will edit your power configuration. The author is not responsible for any damages this program may cause. G14Boost cannot continue unless you agree. Do you agree?", "G14Boost Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+                if (result == DialogResult.No)
+                {
+                    Application.Exit();
+                } else
+                {
+                    Properties.Settings.Default.FirstTime = false;
+                    Properties.Settings.Default.Save();
+                }
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -44,9 +88,75 @@ namespace g14boost
             var res = settingsForm.ShowDialog();
             if (res == DialogResult.OK)
             {
-
+                Properties.Settings.Default.Save();
+                LoadData();
             }
             settingsForm.Dispose();
         }
+
+        private void tempCheckTimer_Tick(object sender, EventArgs e)
+        {
+            // Get CPU temp
+            float? cpuTemp = null;
+            UpdateVisitor updateVisitor = new UpdateVisitor();
+            Computer computer = new Computer();
+            computer.Open();
+            computer.CPUEnabled = true;
+            computer.Accept(updateVisitor);
+            for (int i = 0; i < computer.Hardware.Length; i++)
+            {
+                if (computer.Hardware[i].HardwareType == HardwareType.CPU)
+                {
+                    for (int j = 0; j < computer.Hardware[i].Sensors.Length; j++)
+                    {
+                        if (computer.Hardware[i].Sensors[j].SensorType == SensorType.Temperature)
+                            cpuTemp = computer.Hardware[i].Sensors[j].Value;
+                    }
+                }
+            }
+            computer.Close();
+            if (cpuTemp != null)
+            {
+                float? enableTemp = null, disableTemp = null;
+                bool ac = false, dc = false;
+                if (!IsRunningOnBattery() && Properties.Settings.Default.EnabledAC)
+                {
+                    enableTemp = Properties.Settings.Default.EnableTempAC;
+                    disableTemp = Properties.Settings.Default.DisableTempAC;
+                    ac = true;
+                } else if (IsRunningOnBattery() && Properties.Settings.Default.EnabledDC)
+                {
+                    enableTemp = Properties.Settings.Default.EnableTempDC;
+                    disableTemp = Properties.Settings.Default.DisableTempDC;
+                    dc = true;
+                }
+                bool boostEnabled = false;
+                if (cpuTemp <= enableTemp)
+                {
+                    if (ac)
+                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.EnabledValueAC.ToString());
+                    if (dc)
+                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.EnabledValueDC.ToString());
+                    boostEnabled = true;
+                }
+                else if (cpuTemp >= disableTemp)
+                {
+                    if (ac)
+                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueAC.ToString());
+                    if (dc)
+                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueDC.ToString());
+                    boostEnabled = false;
+                }
+                if (boostEnabled)
+                {
+                    mainTrayIcon.Text = $"Boost Enabled, Temp: {cpuTemp.ToString()}c";
+                } else
+                {
+                    mainTrayIcon.Text = $"Boost Disabled, Temp: {cpuTemp.ToString()}c";
+
+                }
+            }
+        }
+
     }
 }

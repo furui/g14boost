@@ -25,7 +25,7 @@ namespace g14boost.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        [global::System.Configuration.DefaultSettingValueAttribute("75")]
         public float DisableTempAC {
             get {
                 return ((float)(this["DisableTempAC"]));
@@ -37,7 +37,7 @@ namespace g14boost.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        [global::System.Configuration.DefaultSettingValueAttribute("70")]
         public float EnableTempAC {
             get {
                 return ((float)(this["EnableTempAC"]));
@@ -73,7 +73,7 @@ namespace g14boost.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool EnabledAC {
             get {
                 return ((bool)(this["EnabledAC"]));
@@ -152,6 +152,18 @@ namespace g14boost.Properties {
             }
             set {
                 this["RefreshRate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FirstTime {
+            get {
+                return ((bool)(this["FirstTime"]));
+            }
+            set {
+                this["FirstTime"] = value;
             }
         }
     }

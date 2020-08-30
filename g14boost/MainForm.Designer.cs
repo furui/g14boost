@@ -32,10 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.mainTrayIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.mainContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.settingsStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tempCheckTimer = new System.Windows.Forms.Timer(this.components);
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.settingsStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainContextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,30 +54,31 @@
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.mainContextMenuStrip.Name = "mainContextMenuStrip";
-            this.mainContextMenuStrip.Size = new System.Drawing.Size(181, 76);
+            this.mainContextMenuStrip.Size = new System.Drawing.Size(117, 54);
+            // 
+            // settingsStripMenuItem
+            // 
+            this.settingsStripMenuItem.Name = "settingsStripMenuItem";
+            this.settingsStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.settingsStripMenuItem.Text = "&Settings";
+            this.settingsStripMenuItem.Click += new System.EventHandler(this.settingsStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(113, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
             // tempCheckTimer
             // 
             this.tempCheckTimer.Interval = 500;
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // settingsStripMenuItem
-            // 
-            this.settingsStripMenuItem.Name = "settingsStripMenuItem";
-            this.settingsStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.settingsStripMenuItem.Text = "&Settings";
-            this.settingsStripMenuItem.Click += new System.EventHandler(this.settingsStripMenuItem_Click);
+            this.tempCheckTimer.Tick += new System.EventHandler(this.tempCheckTimer_Tick);
             // 
             // MainForm
             // 

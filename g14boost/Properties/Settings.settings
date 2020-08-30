@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="DisableTempAC" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">80</Value>
+      <Value Profile="(Default)">75</Value>
     </Setting>
     <Setting Name="EnableTempAC" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">60</Value>
+      <Value Profile="(Default)">70</Value>
     </Setting>
     <Setting Name="EnabledValueAC" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
@@ -15,7 +15,7 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="EnabledAC" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="EnabledDC" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
@@ -34,6 +34,9 @@
     </Setting>
     <Setting Name="RefreshRate" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="FirstTime" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

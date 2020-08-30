@@ -20,6 +20,21 @@ namespace g14boost
 
         private void Settings_Load(object sender, EventArgs e)
         {
+            ToolTip acBoostEnableTemperatureToolTip = new ToolTip();
+            ToolTip acBoostDisableTemperatureToolTip = new ToolTip();
+            ToolTip dcBoostEnableTemperatureToolTip = new ToolTip();
+            ToolTip dcBoostDisableTemperatureToolTip = new ToolTip();
+            ToolTip acEnabledCheckBoxToolTip = new ToolTip();
+            ToolTip dcEnabledCheckBoxToolTip = new ToolTip();
+            ToolTip refreshRateNumericToolTip = new ToolTip();
+            acBoostEnableTemperatureToolTip.SetToolTip(acBoostEnableTemperature, "When CPU temperature falls below this threshold, boost is enabled.");
+            acBoostDisableTemperatureToolTip.SetToolTip(acBoostDisableTemperature, "When CPU temperature rises above this threshold, boost is disabled.");
+            dcBoostEnableTemperatureToolTip.SetToolTip(dcBoostEnableTemperature, "When CPU temperature falls below this threshold, boost is enabled.");
+            dcBoostDisableTemperatureToolTip.SetToolTip(dcBoostDisableTemperature, "When CPU temperature rises above this threshold, boost is disabled.");
+            acEnabledCheckBoxToolTip.SetToolTip(acEnabledCheckBox, "Check to enable boost control when on AC power.");
+            dcEnabledCheckBoxToolTip.SetToolTip(dcEnabledCheckBox, "Check to enable boost control when on battery power.");
+            refreshRateNumericToolTip.SetToolTip(refreshRateNumeric, "Specify how often to poll for CPU temperature changes.");
+
             acBoostEnableTemperature.Text = Properties.Settings.Default.EnableTempAC.ToString();
             acBoostDisableTemperature.Text = Properties.Settings.Default.DisableTempAC.ToString();
             dcBoostEnableTemperature.Text = Properties.Settings.Default.EnableTempDC.ToString();

@@ -38,6 +38,12 @@
   <PropertyGroup>
     <ApplicationIcon>g14boost.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>g14booststrongname.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="OpenHardwareMonitorLib">
       <HintPath>.\OpenHardwareMonitorLib.dll</HintPath>
@@ -78,6 +84,7 @@
     <Compile Include="Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Settings1.cs" />
     <Compile Include="UpdateVisitor.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -95,6 +102,7 @@
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.manifest" />
+    <None Include="g14booststrongname.snk" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -111,6 +119,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="g14boost.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PowerCfg\PowerCfg.csproj">
+      <Project>{5458b180-e1b0-44d7-85dd-c5063cb7a424}</Project>
+      <Name>PowerCfg</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
