@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/g14boost/OpenHardwareMonitorLib.res
+/g14boost/OpenHardwareMonitor.Hardware.WinRing0x64.sys
+/g14boost/OpenHardwareMonitor.Hardware.WinRing0.sys
