@@ -18,6 +18,19 @@ namespace g14boost
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        static private void OnApplicationExit(object sender, EventArgs e)
+        {
+            // Disable boost on exit
+            if(Utility.IsRunningOnBattery())
+            {
+                PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueDC.ToString());
+            }
+            else
+            {
+                PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueAC.ToString());
+            }
+        }
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -36,6 +49,7 @@ namespace g14boost
 
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
+                    Application.ApplicationExit += new EventHandler(OnApplicationExit);
                     Application.Run(new MainForm());
                 }
                 else

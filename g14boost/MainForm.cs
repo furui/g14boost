@@ -19,20 +19,6 @@ namespace g14boost
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Indicates if we're running on battery power.
-        /// If we are, then disable CPU wasting things like animations, background operations, network, I/O, etc
-        /// </summary>
-        private bool IsRunningOnBattery()
-        {
-            {
-                PowerLineStatus pls = System.Windows.Forms.SystemInformation.PowerStatus.PowerLineStatus;
-
-                //Offline means running on battery
-                return (pls == PowerLineStatus.Offline);
-            }
-        }
-
         private void LoadData()
         {
             if (Properties.Settings.Default.EnabledAC || Properties.Settings.Default.EnabledDC)
@@ -128,12 +114,12 @@ namespace g14boost
 
                 float? enableTemp = null, disableTemp = null;
                 bool ac = false, dc = false;
-                if (!IsRunningOnBattery() && Properties.Settings.Default.EnabledAC)
+                if (!Utility.IsRunningOnBattery() && Properties.Settings.Default.EnabledAC)
                 {
                     enableTemp = Properties.Settings.Default.EnableTempAC;
                     disableTemp = Properties.Settings.Default.DisableTempAC;
                     ac = true;
-                } else if (IsRunningOnBattery() && Properties.Settings.Default.EnabledDC)
+                } else if (Utility.IsRunningOnBattery() && Properties.Settings.Default.EnabledDC)
                 {
                     enableTemp = Properties.Settings.Default.EnableTempDC;
                     disableTemp = Properties.Settings.Default.DisableTempDC;
