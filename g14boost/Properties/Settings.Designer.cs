@@ -145,7 +145,7 @@ namespace g14boost.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
         public decimal RefreshRate {
             get {
                 return ((decimal)(this["RefreshRate"]));
@@ -164,6 +164,18 @@ namespace g14boost.Properties {
             }
             set {
                 this["FirstTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("90")]
+        public float OverTemp {
+            get {
+                return ((float)(this["OverTemp"]));
+            }
+            set {
+                this["OverTemp"] = value;
             }
         }
     }

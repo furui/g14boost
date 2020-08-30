@@ -1,4 +1,5 @@
 ﻿using OpenHardwareMonitor.Hardware;
+using PowerCfg;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -117,6 +118,14 @@ namespace g14boost
             computer.Close();
             if (cpuTemp != null)
             {
+                // Get current settings
+                PowerCfg.QueryValue? qv = PowerCfg.PowerCfgBroker.Query("scheme_current", "sub_processor", "perfboostmode");
+                if (qv == null || (qv.Value.SubGroups.Count < 1) || (qv.Value.SubGroups[0].Settings.Count < 1)) return;
+                PowerCfg.QuerySetting perfBoostMode = qv.Value.SubGroups[0].Settings[0];
+                int efficientEnabled = Array.FindIndex(perfBoostMode.PossibleSettings, setting => setting.FriendlyName == "Efficient Enabled");
+                int curACValue = perfBoostMode.ACSetting;
+                int curDCValue = perfBoostMode.DCSetting;
+
                 float? enableTemp = null, disableTemp = null;
                 bool ac = false, dc = false;
                 if (!IsRunningOnBattery() && Properties.Settings.Default.EnabledAC)
@@ -130,20 +139,34 @@ namespace g14boost
                     disableTemp = Properties.Settings.Default.DisableTempDC;
                     dc = true;
                 }
+                if (Properties.Settings.Default.EnabledAC || Properties.Settings.Default.EnabledDC)
+                {
+                    // For now this is only enabled if either AC/DC is enabled
+                    if ((cpuTemp > Properties.Settings.Default.OverTemp) && efficientEnabled != -1)
+                    {
+                        // Putting the power policy into Efficient Enabled seems to knock it out of the aggressive boost state
+                        if (ac)
+                            PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", efficientEnabled.ToString());
+                        if (dc)
+                            PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", efficientEnabled.ToString());
+                        mainTrayIcon.Text = $"WARNING Temp over limit: {cpuTemp.ToString()}c";
+                        return;
+                    }
+                }
                 bool boostEnabled = false;
                 if (cpuTemp <= enableTemp)
                 {
-                    if (ac)
+                    if (ac && (curACValue != Properties.Settings.Default.EnabledValueAC))
                         PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.EnabledValueAC.ToString());
-                    if (dc)
+                    if (dc && (curACValue != Properties.Settings.Default.EnabledValueDC))
                         PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.EnabledValueDC.ToString());
                     boostEnabled = true;
                 }
                 else if (cpuTemp >= disableTemp)
                 {
-                    if (ac)
+                    if (ac && (curACValue != Properties.Settings.Default.DisabledValueAC))
                         PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueAC.ToString());
-                    if (dc)
+                    if (dc && (curACValue != Properties.Settings.Default.DisabledValueDC))
                         PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueDC.ToString());
                     boostEnabled = false;
                 }

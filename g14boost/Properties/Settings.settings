@@ -33,10 +33,13 @@
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="RefreshRate" Type="System.Decimal" Scope="User">
-      <Value Profile="(Default)">500</Value>
+      <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="FirstTime" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="OverTemp" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">90</Value>
     </Setting>
   </Settings>
 </SettingsFile>
