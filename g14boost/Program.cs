@@ -24,10 +24,12 @@ namespace g14boost
             if(Utility.IsRunningOnBattery())
             {
                 PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueDC.ToString());
+                PowerCfg.PowerCfgBroker.SetActive("scheme_current");
             }
             else
             {
                 PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueAC.ToString());
+                PowerCfg.PowerCfgBroker.SetActive("scheme_current");
             }
         }
 

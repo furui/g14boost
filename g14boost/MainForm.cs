@@ -132,9 +132,15 @@ namespace g14boost
                     {
                         // Putting the power policy into Efficient Enabled seems to knock it out of the aggressive boost state
                         if (ac)
+                        {
                             PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", efficientEnabled.ToString());
+                            PowerCfg.PowerCfgBroker.SetActive("scheme_current");
+                        }
                         if (dc)
+                        {
                             PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", efficientEnabled.ToString());
+                            PowerCfg.PowerCfgBroker.SetActive("scheme_current");
+                        }
                         mainTrayIcon.Text = $"WARNING Temp over limit: {cpuTemp.ToString()}c";
                         return;
                     }
@@ -143,17 +149,29 @@ namespace g14boost
                 if (cpuTemp <= enableTemp)
                 {
                     if (ac && (curACValue != Properties.Settings.Default.EnabledValueAC))
+                    {
                         PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.EnabledValueAC.ToString());
+                        PowerCfg.PowerCfgBroker.SetActive("scheme_current");
+                    }
                     if (dc && (curACValue != Properties.Settings.Default.EnabledValueDC))
+                    {
                         PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.EnabledValueDC.ToString());
+                        PowerCfg.PowerCfgBroker.SetActive("scheme_current");
+                    }
                     boostEnabled = true;
                 }
                 else if (cpuTemp >= disableTemp)
                 {
                     if (ac && (curACValue != Properties.Settings.Default.DisabledValueAC))
+                    {
                         PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueAC.ToString());
+                        PowerCfg.PowerCfgBroker.SetActive("scheme_current");
+                    }
                     if (dc && (curACValue != Properties.Settings.Default.DisabledValueDC))
+                    {
                         PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueDC.ToString());
+                        PowerCfg.PowerCfgBroker.SetActive("scheme_current");
+                    }
                     boostEnabled = false;
                 }
                 if (boostEnabled)

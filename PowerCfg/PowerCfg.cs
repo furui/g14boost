@@ -329,7 +329,34 @@ namespace PowerCfg
             bool exited = p.WaitForExit(5000);
             if (!exited) throw new System.TimeoutException($"Timeout setting {SubGroup} {Settings} value index: {String.Join(",", error.ToArray())}");
             if (p.ExitCode != 0) throw new System.ArgumentException($"Could not set {SubGroup} {Settings} value index: {String.Join(",", error.ToArray())}");
-
         }
+
+        public static void SetActive(string Scheme)
+        {
+            if (!IsUserAnAdmin()) throw new System.UnauthorizedAccessException("User must be an administrator to modify value indexes");
+            List<string> error = new List<string>();
+
+            var p = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "powercfg.exe",
+                    Arguments = $"-s {Scheme}",
+                    UseShellExecute = false,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+            p.Start();
+            while (!p.StandardError.EndOfStream)
+            {
+                string line = p.StandardError.ReadLine();
+                error.Add(line);
+            }
+            bool exited = p.WaitForExit(5000);
+            if (!exited) throw new System.TimeoutException($"Timeout setting scheme {Scheme} active: {String.Join(",", error.ToArray())}");
+            if (p.ExitCode != 0) throw new System.ArgumentException($"Could not set scheme {Scheme} active: {String.Join(",", error.ToArray())}");
+        }
+
     }
 }
