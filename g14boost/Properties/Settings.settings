@@ -8,12 +8,6 @@
     <Setting Name="EnableTempAC" Type="System.Single" Scope="User">
       <Value Profile="(Default)">70</Value>
     </Setting>
-    <Setting Name="EnabledValueAC" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="DisabledValueAC" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
     <Setting Name="EnabledAC" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -26,12 +20,6 @@
     <Setting Name="EnableTempDC" Type="System.Single" Scope="User">
       <Value Profile="(Default)">50</Value>
     </Setting>
-    <Setting Name="EnabledValueDC" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1</Value>
-    </Setting>
-    <Setting Name="DisabledValueDC" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
     <Setting Name="RefreshRate" Type="System.Decimal" Scope="User">
       <Value Profile="(Default)">1000</Value>
     </Setting>
@@ -40,6 +28,21 @@
     </Setting>
     <Setting Name="OverTemp" Type="System.Single" Scope="User">
       <Value Profile="(Default)">90</Value>
+    </Setting>
+    <Setting Name="EnabledNameAC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Enabled</Value>
+    </Setting>
+    <Setting Name="DisabledNameAC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Disabled</Value>
+    </Setting>
+    <Setting Name="EnabledNameDC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Disabled</Value>
+    </Setting>
+    <Setting Name="DisabledNameDC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Disabled</Value>
+    </Setting>
+    <Setting Name="OverTempName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Efficient Enabled</Value>
     </Setting>
   </Settings>
 </SettingsFile>

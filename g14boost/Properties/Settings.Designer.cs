@@ -49,30 +49,6 @@ namespace g14boost.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int EnabledValueAC {
-            get {
-                return ((int)(this["EnabledValueAC"]));
-            }
-            set {
-                this["EnabledValueAC"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int DisabledValueAC {
-            get {
-                return ((int)(this["DisabledValueAC"]));
-            }
-            set {
-                this["DisabledValueAC"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool EnabledAC {
             get {
@@ -121,30 +97,6 @@ namespace g14boost.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int EnabledValueDC {
-            get {
-                return ((int)(this["EnabledValueDC"]));
-            }
-            set {
-                this["EnabledValueDC"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int DisabledValueDC {
-            get {
-                return ((int)(this["DisabledValueDC"]));
-            }
-            set {
-                this["DisabledValueDC"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("1000")]
         public decimal RefreshRate {
             get {
@@ -176,6 +128,66 @@ namespace g14boost.Properties {
             }
             set {
                 this["OverTemp"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Enabled")]
+        public string EnabledNameAC {
+            get {
+                return ((string)(this["EnabledNameAC"]));
+            }
+            set {
+                this["EnabledNameAC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Disabled")]
+        public string DisabledNameAC {
+            get {
+                return ((string)(this["DisabledNameAC"]));
+            }
+            set {
+                this["DisabledNameAC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Disabled")]
+        public string EnabledNameDC {
+            get {
+                return ((string)(this["EnabledNameDC"]));
+            }
+            set {
+                this["EnabledNameDC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Disabled")]
+        public string DisabledNameDC {
+            get {
+                return ((string)(this["DisabledNameDC"]));
+            }
+            set {
+                this["DisabledNameDC"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Efficient Enabled")]
+        public string OverTempName {
+            get {
+                return ((string)(this["OverTempName"]));
+            }
+            set {
+                this["OverTempName"] = value;
             }
         }
     }

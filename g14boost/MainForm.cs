@@ -81,9 +81,8 @@ namespace g14boost
             settingsForm.Dispose();
         }
 
-        private void tempCheckTimer_Tick(object sender, EventArgs e)
+        private float? getCPUTemp()
         {
-            // Get CPU temp
             float? cpuTemp = null;
             UpdateVisitor updateVisitor = new UpdateVisitor();
             Computer computer = new Computer();
@@ -102,13 +101,25 @@ namespace g14boost
                 }
             }
             computer.Close();
+            return cpuTemp;
+        }
+
+        private void tempCheckTimer_Tick(object sender, EventArgs e)
+        {
+            // Get CPU temp
+            float? cpuTemp = getCPUTemp();
             if (cpuTemp != null)
             {
                 // Get current settings
                 PowerCfg.QueryValue? qv = PowerCfg.PowerCfgBroker.Query("scheme_current", "sub_processor", "perfboostmode");
                 if (qv == null || (qv.Value.SubGroups.Count < 1) || (qv.Value.SubGroups[0].Settings.Count < 1)) return;
                 PowerCfg.QuerySetting perfBoostMode = qv.Value.SubGroups[0].Settings[0];
-                int efficientEnabled = Array.FindIndex(perfBoostMode.PossibleSettings, setting => setting.FriendlyName == "Efficient Enabled");
+                int overTempVal = Array.FindIndex(perfBoostMode.PossibleSettings, setting => setting.FriendlyName == Properties.Settings.Default.OverTempName);
+                int acEnabledVal = Array.FindIndex(perfBoostMode.PossibleSettings, setting => setting.FriendlyName == Properties.Settings.Default.EnabledNameAC);
+                int acDisabledVal = Array.FindIndex(perfBoostMode.PossibleSettings, setting => setting.FriendlyName == Properties.Settings.Default.DisabledNameAC);
+                int dcEnabledVal = Array.FindIndex(perfBoostMode.PossibleSettings, setting => setting.FriendlyName == Properties.Settings.Default.EnabledNameDC);
+                int dcDisabledVal = Array.FindIndex(perfBoostMode.PossibleSettings, setting => setting.FriendlyName == Properties.Settings.Default.DisabledNameDC);
+
                 int curACValue = perfBoostMode.ACSetting;
                 int curDCValue = perfBoostMode.DCSetting;
 
@@ -128,17 +139,17 @@ namespace g14boost
                 if (Properties.Settings.Default.EnabledAC || Properties.Settings.Default.EnabledDC)
                 {
                     // For now this is only enabled if either AC/DC is enabled
-                    if ((cpuTemp > Properties.Settings.Default.OverTemp) && efficientEnabled != -1)
+                    if ((cpuTemp > Properties.Settings.Default.OverTemp) && overTempVal != -1)
                     {
                         // Putting the power policy into Efficient Enabled seems to knock it out of the aggressive boost state
                         if (ac)
                         {
-                            PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", efficientEnabled.ToString());
+                            PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", overTempVal.ToString());
                             PowerCfg.PowerCfgBroker.SetActive("scheme_current");
                         }
                         if (dc)
                         {
-                            PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", efficientEnabled.ToString());
+                            PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", overTempVal.ToString());
                             PowerCfg.PowerCfgBroker.SetActive("scheme_current");
                         }
                         mainTrayIcon.Text = $"WARNING Temp over limit: {cpuTemp.ToString()}c";
@@ -148,28 +159,28 @@ namespace g14boost
                 bool boostEnabled = false;
                 if (cpuTemp <= enableTemp)
                 {
-                    if (ac && (curACValue != Properties.Settings.Default.EnabledValueAC))
+                    if (ac && (curACValue != acEnabledVal))
                     {
-                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.EnabledValueAC.ToString());
+                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", acEnabledVal.ToString());
                         PowerCfg.PowerCfgBroker.SetActive("scheme_current");
                     }
-                    if (dc && (curACValue != Properties.Settings.Default.EnabledValueDC))
+                    if (dc && (curACValue != dcEnabledVal))
                     {
-                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.EnabledValueDC.ToString());
+                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", dcEnabledVal.ToString());
                         PowerCfg.PowerCfgBroker.SetActive("scheme_current");
                     }
                     boostEnabled = true;
                 }
                 else if (cpuTemp >= disableTemp)
                 {
-                    if (ac && (curACValue != Properties.Settings.Default.DisabledValueAC))
+                    if (ac && (curACValue != acDisabledVal))
                     {
-                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueAC.ToString());
+                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.AC, "scheme_current", "sub_processor", "perfboostmode", acDisabledVal.ToString());
                         PowerCfg.PowerCfgBroker.SetActive("scheme_current");
                     }
-                    if (dc && (curACValue != Properties.Settings.Default.DisabledValueDC))
+                    if (dc && (curACValue != dcDisabledVal))
                     {
-                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", Properties.Settings.Default.DisabledValueDC.ToString());
+                        PowerCfg.PowerCfgBroker.SetValueIndex(PowerCfg.ValueIndex.DC, "scheme_current", "sub_processor", "perfboostmode", dcDisabledVal.ToString());
                         PowerCfg.PowerCfgBroker.SetActive("scheme_current");
                     }
                     boostEnabled = false;
