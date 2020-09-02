@@ -14,6 +14,8 @@ namespace g14boost
 {
     public partial class MainForm : Form
     {
+        private Computer computer;
+
         public MainForm()
         {
             InitializeComponent();
@@ -57,10 +59,13 @@ namespace g14boost
                     Properties.Settings.Default.Save();
                 }
             }
+            computer = new Computer();
+            computer.Open();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            computer.Close();
             Application.Exit();
         }
 
@@ -85,8 +90,6 @@ namespace g14boost
         {
             float? cpuTemp = null;
             UpdateVisitor updateVisitor = new UpdateVisitor();
-            Computer computer = new Computer();
-            computer.Open();
             computer.CPUEnabled = true;
             computer.Accept(updateVisitor);
             for (int i = 0; i < computer.Hardware.Length; i++)
@@ -100,7 +103,6 @@ namespace g14boost
                     }
                 }
             }
-            computer.Close();
             return cpuTemp;
         }
 
